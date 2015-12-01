@@ -10,14 +10,14 @@ App = React.createClass({
 	
 	getMeteorData() {
 		return {
-			entries: Entries.find({}, { sort: { createdAt: -1}}).fetch(),
+			entries: Entries.find({ parentEntryId: ""}, { sort: { createdAt: -1}}).fetch(),
 			relations: Relations.find().fetch(),
 			currentUser: Meteor.user()
 		}
 	},
 	
 	renderEntries() {
-		console.log(this);
+		//console.log(this);
 		return this.data.entries.map((entry) => {
 			return <Entry
 				key={entry._id}
@@ -33,7 +33,7 @@ App = React.createClass({
 				
 				<AccountsUIWrapper />
 				{ this.data.currentUser ?
-					<EntryForm /> : ''
+					<EntryForm parentEntryId=""/> : ''
 				}
 				
 				</header>
@@ -41,6 +41,18 @@ App = React.createClass({
 				<ul>
 					{this.renderEntries()}
 				</ul>
+				
+				{/*<br/><br/>
+				<ul>
+					<li>L1E1</li>
+					<li>L1E2
+						<ul>
+							<li>L2E1</li>
+							<li>L2E2</li>
+						</ul>
+					</li>
+				</ul>*/}
+				
 			</div>
 		);
 	}

@@ -7,7 +7,8 @@ EntryForm = React.createClass({
 	},
 	
 	propTypes: {
-		parentEntryId: React.PropTypes.bool
+		parentEntryId: React.PropTypes.string,
+		closeForm: React.PropTypes.func
 	},
 	
 	handleSubmit(event) {
@@ -17,14 +18,18 @@ EntryForm = React.createClass({
     var entryText = React.findDOMNode(this.refs.entryInput).value.trim();
 		var tagText = React.findDOMNode(this.refs.tagInput).value.trim();
  		
-		if (this.props.parentEntryId) {
+		/*if (this.props.parentEntryId) {
 			Meteor.call("addEntryToParent", this.props.parentEntryId, entryText, tagText);
 		} else {
     	Meteor.call("addEntry", entryText, tagText);
-		}
+		}*/
+		//console.log("props:" + this.props);
+		//console.log("parentId:" + this.props.parentEntryId);
+		Meteor.call("addEntry", this.props.parentEntryId, entryText, tagText);
     // Clear form
     React.findDOMNode(this.refs.entryInput).value = "";
 		//React.findDOMNode(this.refs.tagInput).value = "";
+		this.props.closeForm();
   },
 	
 	render() {

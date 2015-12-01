@@ -26,32 +26,44 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
-	addEntry(text, tag) {
+	addEntry(parentId, text, tag) {
 		//console.log(text + " : 1");
 		if (! Meteor.userId()) {
 			throw new Meteor.Error("not-authorized");
 		}
+		let parent = parentId ? Entries.findOne(parentId) : "";
+		if (!parent) {
+			parentId = "";
+		}
 		//console.log(text + " : 2");
-		return Entries.insert({
+		let childId = Entries.insert({
 			text: text,
 			tag: tag,
 			childEntryIds: [],
+			parentEntryId: parentId,
 			createdAt: new Date(),
 			owner: Meteor.userId(),
 			username: Meteor.user().username
 		});
+		console.log("adding");
+		if (parent) {
+			Entries.update({_id: parentId}, { $addToSet: {childEntryIds: childId}});
+			console.log("also to parent");
+		} 
 	},
-	
+	/*
 	addEntryToParent(parentId, text, tag) {
 		let parent = Entries.findOne(parentId);
 		if (! Meteor.userId()) {
 			throw new Meteor.Error("not-authorized");
 		}
-		let childId = addEntry(text, tag);
-		parent.childEntryIds.push(childId);
-		return childId;
+		//let childId = addEntry(text, tag);
+		Meteor.call("addEntry", [text, tag, parentId], function(childId) {
+			parent.childEntryIds.push(childId);
+			return childId;
+		})
 	},
-	
+	*/
 	removeEntry(entryId) {
 		const entry = Entries.findOne(entryId);
 		if (entry.owner !== Meteor.userId()) {
