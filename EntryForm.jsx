@@ -1,13 +1,18 @@
-EntryForm = React.CreateClass({
+EntryForm = React.createClass({
+	mixins: [ReactMeteorData],
+	getMeteorData() {
+		return {
+			currentUser: Meteor.user()
+		}
+	},
+	
 	propTypes: {
 		parentEntryId: React.PropTypes.bool
 	},
 	
 	handleSubmit(event) {
-		//console.log("addEntry");
     event.preventDefault();
 		
-    //console.log(this);
     // Find the text field via the React ref
     var entryText = React.findDOMNode(this.refs.entryInput).value.trim();
 		var tagText = React.findDOMNode(this.refs.tagInput).value.trim();
@@ -24,13 +29,8 @@ EntryForm = React.CreateClass({
 	
 	render() {
 		return (
-			{ this.data.currentUser ?
 					<form className="new-entry" onSubmit={this.handleSubmit} >
 						Add Entry <br/>
-						{/*<input
-							type="text"
-							ref="entryInput"
-							placeholder="Type to add new entries" /> <br/>*/}
 						<textarea
 							cols="40"
 							rows="3" 
@@ -41,8 +41,7 @@ EntryForm = React.CreateClass({
 							ref="tagInput"
 							placeholder="Type to add a tag" /> <br/>
 						<input type='submit' /> <br/>
-					</form> : ''
-				}
+					</form>
 		);
 	}
 });

@@ -32,8 +32,9 @@ App = React.createClass({
 				<h1>Discussion</h1>
 				
 				<AccountsUIWrapper />
-				
-				<EntryForm />
+				{ this.data.currentUser ?
+					<EntryForm /> : ''
+				}
 				
 				</header>
 		
