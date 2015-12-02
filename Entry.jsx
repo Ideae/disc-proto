@@ -8,7 +8,8 @@ Entry = React.createClass({
 	
 	getInitialState() {
 		return {
-			showForm: false
+			showForm: false,
+			collapsed: false
 		};
 	},
 	
@@ -27,9 +28,13 @@ Entry = React.createClass({
 	closeEntryForm() {
 		this.setState({showForm: false});
 	},
+	toggleCollapsed() {
+		//console.log(this.props.entry.text);
+		this.setState({collapsed: ! this.state.collapsed });
+	},
 	
 	renderEntries() {
-		console.log("LEN:" + this.data.childEntries.length);
+		//console.log("LEN:" + this.data.childEntries.length);
 		var childs = this.data.childEntries.map((entry) => {
 			return <Entry
 				key={entry._id}
@@ -46,14 +51,17 @@ Entry = React.createClass({
 	render() {
 		return (
 				<li className="entry">
+					<a href="javascript:void(0)" onClick={this.toggleCollapsed}>{this.state.collapsed?'[ + ]':'[ - ]'}</a>
 					<span className="entry-author">{this.props.entry.username}</span>
 					<span className="entry-tag">{this.props.entry.tag}</span>
+					{ ! this.state.collapsed ? 
+					<div>
 					<br/>
 					{this.props.entry.text}<br/>
 					<a href="javascript:void(0)" onClick={this.toggleEntryForm}>Reply</a>
 					{ this.state.showForm ? 
 						<div>
-						<EntryForm parentEntryId={this.props.entry._id} closeForm={this.closeEntryForm} />
+						<EntryForm key={this.props.entry._id} parentEntryId={this.props.entry._id} closeForm={this.closeEntryForm} />
 						</div> : ''
 					}
 					{ this.data.childEntries.length > 0 ?
@@ -61,7 +69,8 @@ Entry = React.createClass({
 						{this.renderEntries()}
 						</ul> : ''
 					}
-					
+					</div>
+					: '' }
 				</li>
 		);
 	}
